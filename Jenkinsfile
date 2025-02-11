@@ -18,7 +18,7 @@ pipeline {
             }
         }
 
-        tage('Authenticate with AWS ECR') {
+        stage('Authenticate with AWS ECR') {
             steps {
                 script {
                     sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY'
