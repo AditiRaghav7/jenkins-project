@@ -19,13 +19,13 @@ pipeline {
             }
         }
 
-        //stage('Login to ECR') {
-          //  steps {
-          //   script {
-           //         sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY'
-            //       }
-            //     }
-          //  }
+        stage('Login to ECR') {
+           steps {
+          script {
+                 sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY'
+                 }
+            }
+          }
 
         stage('Delete Old Images from ECR') {
             steps {
