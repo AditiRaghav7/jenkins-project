@@ -1,9 +1,27 @@
-FROM node
-RUN mkdir -p /app
+# Use an official Node.js runtime as the base image
+FROM node:alpine
+
+# Set the working directory in the container
 WORKDIR /app
-RUN cp /package.json /app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json /app/
+
+# Install dependencies
 RUN npm install
-COPY . /usr/src/app
+
+# Copy the rest of the application code to the working directory
+COPY . /app
+
+# Expose the port on which your Node.js application will run
+
+ENV MYSQL_HOST="ip-51-20-129-186"
+ENV MYSQL_USER="Aditi@1122"
+ENV MYSQL_PASSWORD="Password1!"
+ENV MYSQL_DATABASE="employees_db"
+ENV MYSQL_PORT="3306"
 EXPOSE 8000
-EXPOSE 3306
-CMD ["npm", "start"]
+
+
+# Command to run the Node.js application
+CMD ["node", "app.js"]
