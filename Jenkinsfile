@@ -8,6 +8,7 @@ pipeline {
         FRONTEND_IMAGE = "${ECR_REGISTRY}/ema-frontend:latest"
         BACKEND_IMAGE = "${ECR_REGISTRY}/ema-backend:latest"
         DB_IMAGE = "${ECR_REGISTRY}/ema-db:latest"
+        
     }
 
     stages {
