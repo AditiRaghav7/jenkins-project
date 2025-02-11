@@ -80,5 +80,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Set MySQL Root Password') {
+            steps {
+                script {
+                    sh """
+                    docker run --name my-mysql-container -e MYSQL_ROOT_PASSWORD=Aditi@1122 -d ema-db
+                    """
+                }
+            }
+        }
     }
 }
