@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-1'
-        ECR_REGISTRY = '010438482119.dkr.ecr.us-east-1.amazonaws.com'
+        AWS_REGION = 'eu-north-1'
+        ECR_REGISTRY = '296062592493.dkr.ecr.eu-north-1.amazonaws.com'
         FRONTEND_IMAGE = "${ECR_REGISTRY}/ema-frontend:latest"
         BACKEND_IMAGE = "${ECR_REGISTRY}/ema-backend:latest"
         DB_IMAGE = "${ECR_REGISTRY}/ema-db:latest"
@@ -14,22 +14,17 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    git credentialsId: 'github-credentials', url: 'https://github.com/git-hub-sachin/EMA.git', branch: 'EKS-EMA'
+                    git url: 'https://github.com/AditiRaghav7/jenkins-project.git', branch: 'main'
                 }
             }
         }
 
         stage('Login to ECR') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        sh """
-                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        aws configure set region $AWS_REGION
-                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
-                        """
-                    }
+                 script {
+                    sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY'
+                }
+
                 }
             }
         }
