@@ -5,9 +5,15 @@ pipeline {
         AWS_REGION = 'eu-north-1'
         ECR_REGISTRY = '296062592493.dkr.ecr.eu-north-1.amazonaws.com'
                 ECR_REPOSITORY = 'employee-ecr-jenkins'
-        FRONTEND_IMAGE = "${ECR_REGISTRY}/ema-frontend:latest"
-        BACKEND_IMAGE = "${ECR_REGISTRY}/ema-backend:latest"
-        DB_IMAGE = "${ECR_REGISTRY}/ema-db:latest"
+        //FRONTEND_IMAGE = "${ECR_REGISTRY}/ema-frontend:latest"
+        //BACKEND_IMAGE = "${ECR_REGISTRY}/ema-backend:latest"
+        //DB_IMAGE = "${ECR_REGISTRY}/ema-db:latest"
+
+        ECR_REPOSITORY = 'employee-ecr-jenkins'
+        FRONTEND_IMAGE = 'my-frontend-image'
+        BACKEND_IMAGE = 'my-backend-image'
+        MYSQL_IMAGE = 'my-mysql-image'
+
     }
 
     stages {
@@ -45,9 +51,11 @@ pipeline {
                         script {
                             sh """
                             cd frontend/
-                            docker build -t ema-frontend .
-                            docker tag ema-frontend:latest $FRONTEND_IMAGE
-                            docker push $FRONTEND_IMAGE
+                           sh "docker build -t ${FRONTEND_IMAGE} "
+ sh "docker tag ${FRONTEND_IMAGE}:latest ${ECR_REGISTRY}/${ECR_REPOSITORY}:frontend-latest"   
+                    sh "docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:frontend-latest"
+  sh "docker run -d --name my-frontend-container -p 5000:5000 ${ECR_REGISTRY}/${ECR_REPOSITORY}:frontend-latest"
+
                             cd ..
                             """
                         }
@@ -58,9 +66,11 @@ pipeline {
                         script {
                             sh """
                             cd backend/
-                            docker build -t ema-backend .
-                            docker tag ema-backend:latest $BACKEND_IMAGE
-                            docker push $BACKEND_IMAGE
+                           sh "docker build -t ${BACKEND_IMAGE}"
+                            sh "docker tag ${BACKEND_IMAGE}:latest ${ECR_REGISTRY}/${ECR_REPOSITORY}:backend-latest"
+                    sh "docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:backend-latest"
+                     sh "docker run -d --name my-backend-container -p 8000:8000 ${ECR_REGISTRY}/${ECR_REPOSITORY}:backend-latest"
+                    
                             cd ..
                             """
                         }
@@ -71,9 +81,10 @@ pipeline {
                         script {
                             sh """
                             cd mysql/
-                            docker build -t ema-db .
-                            docker tag ema-db:latest $DB_IMAGE
-                            docker push $DB_IMAGE
+                    sh "docker build -t ${MYSQL_IMAGE}"
+                    sh "docker tag ${MYSQL_IMAGE}:latest ${ECR_REGISTRY}/${ECR_REPOSITORY}:mysql-latest"
+                    sh "docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:mysql-latest"
+                                        sh "docker run -d --name my-mysql-container -p 3306:3306 ${ECR_REGISTRY}/${ECR_REPOSITORY}:mysql-latest"
                             cd ..
                             """
                         }
