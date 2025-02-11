@@ -84,11 +84,5 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                sh "aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 296062592493.dkr.ecr.eu-north-1.amazonaws.com"
-            }
-        }
-    }
+  
 }
