@@ -85,6 +85,8 @@ pipeline {
             steps {
                 script {
                     sh """
+                    docker stop my-mysql-container || true
+                    docker rm my-mysql-container || true
                     docker run --name my-mysql-container -e MYSQL_ROOT_PASSWORD=Aditi@1122 -d ema-db
                     """
                 }
