@@ -4,6 +4,7 @@ pipeline {
     environment {
         AWS_REGION = 'eu-north-1'
         ECR_REGISTRY = '296062592493.dkr.ecr.eu-north-1.amazonaws.com'
+                ECR_REPOSITORY = 'employee-ecr-jenkins'
         FRONTEND_IMAGE = "${ECR_REGISTRY}/ema-frontend:latest"
         BACKEND_IMAGE = "${ECR_REGISTRY}/ema-backend:latest"
         DB_IMAGE = "${ECR_REGISTRY}/ema-db:latest"
