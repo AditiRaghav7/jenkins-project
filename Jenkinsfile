@@ -10,7 +10,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 script {
@@ -29,12 +28,26 @@ pipeline {
             }
         }
 
+        stage('Ensure ECR Repositories Exist') {
+            steps {
+                script {
+                    sh """
+                    aws ecr describe-repositories --repository-names ema-frontend || aws ecr create-repository --repository-name ema-frontend
+                    aws ecr describe-repositories --repository-names ema-backend || aws ecr create-repository --repository-name ema-backend
+                    aws ecr describe-repositories --repository-names ema-db || aws ecr create-repository --repository-name ema-db
+                    """
+                }
+            }
+        }
+
         stage('Delete Old Images from ECR') {
             steps {
                 script {
-                    sh "aws ecr batch-delete-image --repository-name ema-frontend --image-ids imageTag=latest || true"
-                    sh "aws ecr batch-delete-image --repository-name ema-backend --image-ids imageTag=latest || true"
-                    sh "aws ecr batch-delete-image --repository-name ema-db --image-ids imageTag=latest || true"
+                    sh """
+                    aws ecr batch-delete-image --repository-name ema-frontend --image-ids imageTag=latest || echo "No old frontend image"
+                    aws ecr batch-delete-image --repository-name ema-backend --image-ids imageTag=latest || echo "No old backend image"
+                    aws ecr batch-delete-image --repository-name ema-db --image-ids imageTag=latest || echo "No old db image"
+                    """
                 }
             }
         }
@@ -46,10 +59,10 @@ pipeline {
                         script {
                             sh """
                             cd frontend/
+                            docker buildx create --use || true
                             docker build -t ema-frontend .
                             docker tag ema-frontend:latest $FRONTEND_IMAGE
                             docker push $FRONTEND_IMAGE
-                            cd ..
                             """
                         }
                     }
@@ -59,10 +72,10 @@ pipeline {
                         script {
                             sh """
                             cd backend/
+                            docker buildx create --use || true
                             docker build -t ema-backend .
                             docker tag ema-backend:latest $BACKEND_IMAGE
                             docker push $BACKEND_IMAGE
-                            cd ..
                             """
                         }
                     }
@@ -72,10 +85,10 @@ pipeline {
                         script {
                             sh """
                             cd mysql/
+                            docker buildx create --use || true
                             docker build -t ema-db .
                             docker tag ema-db:latest $DB_IMAGE
                             docker push $DB_IMAGE
-                            cd ..
                             """
                         }
                     }
