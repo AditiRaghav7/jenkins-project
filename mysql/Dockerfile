@@ -10,4 +10,4 @@ ENV MYSQL_DATABASE="employees_db"
 EXPOSE 3306
 
 # Copy initialization SQL script into Docker container
-COPY init.sql /docker-entrypoint-initdb.d/
+COPY ./sql-scripts/ /docker-entrypoint-initdb.d/
