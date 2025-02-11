@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    git credentialsId: 'github-credentials', url: 'https://github.com/AditiRaghav7/jenkins-project.git', branch: 'main'
+                    git  url: 'https://github.com/AditiRaghav7/jenkins-project.git', branch: 'main'
                 }
             }
         }
