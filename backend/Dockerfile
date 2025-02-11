@@ -27,5 +27,5 @@ EXPOSE 8000
 
 
 # Command to run the Node.js application
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
 
